@@ -21,6 +21,11 @@ public class SpeedDialog extends JDialog {
             dispose();
         });
 
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPanel.add(speedSlider, BorderLayout.CENTER);
+
         this.setLayout(new BorderLayout());
         this.add(new JLabel("Ajuste a Velocidade:"), BorderLayout.NORTH);
         this.add(speedSlider, BorderLayout.CENTER);

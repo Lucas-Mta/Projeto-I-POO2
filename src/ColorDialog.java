@@ -16,11 +16,16 @@ public class ColorDialog extends JDialog{
             if (color != null) {
                 // Implementar a mudança de cor do fundo
                 System.out.println("Cor selecionada: " + color);
+                dispose();
             }
         });
 
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPanel.add(colorButton);
+
         this.setLayout(new BorderLayout());
         this.add(new JLabel("Escolha a cor de fundo"), BorderLayout.NORTH);
-        this.add(colorButton, BorderLayout.CENTER);
+        this.add(centerPanel, BorderLayout.CENTER);
     }
 }
