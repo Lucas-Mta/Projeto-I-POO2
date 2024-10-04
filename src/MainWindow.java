@@ -1,5 +1,7 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 import java.io.Serial;
 
 public class MainWindow extends JFrame {
@@ -9,6 +11,8 @@ public class MainWindow extends JFrame {
     private JPanel statusPanel;
     private JLabel statusLabel;
     private JMenuBar menuBar;
+    private JTextArea textArea; // Área de texto para exibir o conteúdo do arquivo
+    private FileHandler fileHandler; // Objeto manipulador dos arquivos
     private String title;
 
     public MainWindow(String title) {
@@ -21,8 +25,8 @@ public class MainWindow extends JFrame {
 
     private void configureWindow() {
         // Definir o tamanho da janela
-        this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.5),
-                (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.45));
+        this.setSize((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() * 0.6),
+                (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() * 0.6));
 
         // Centralizar a janela
         this.setLocationRelativeTo(null);
@@ -37,10 +41,21 @@ public class MainWindow extends JFrame {
     private void initializeComponents() {
         // Inicializa a BARRA DE STATUS
         statusPanel = new JPanel();
-        statusLabel = new JLabel(this.title);
+        statusLabel = new JLabel(this.title); // Mudar depois
         statusPanel.add(statusLabel);
         statusPanel.setBackground(Color.LIGHT_GRAY);
         statusPanel.setBorder(BorderFactory.createEtchedBorder());
+
+        // Inicializa a ÁREA DE TEXTO
+        textArea = new JTextArea();
+        textArea.setMargin(new Insets(10, 10, 10, 10));
+        textArea.setEditable(false);
+        textArea.setLineWrap(true); // Quebra de linha automática
+        textArea.setWrapStyleWord(true);
+        textArea.setFont(new Font("Serif", Font.PLAIN, 16));
+
+        // Inicializa o MANIPULADOR DE ARQUIVOS
+        fileHandler = new FileHandler(textArea);
 
         // Inicializa a BARRA DE MENUS
         menuBar = new JMenuBar();
@@ -51,15 +66,16 @@ public class MainWindow extends JFrame {
         JMenuItem closeItem = new JMenuItem("Fechar Arquivo");
         JMenuItem exitItem = new JMenuItem("Sair");
 
+        // Ações do menu Arquivos
+        openItem.addActionListener(e -> fileHandler.openFile(this));
+        closeItem.addActionListener(e -> fileHandler.closeFile());
+        exitItem.addActionListener(e -> System.exit(0));
+
         // Adiciona os itens no menu Arquivos:
         fileMenu.add(openItem);
         fileMenu.add(closeItem);
         fileMenu.addSeparator();
         fileMenu.add(exitItem);
-
-        // Fechar a aplicação no item de Saída(exitItem)
-        exitItem.addActionListener(e -> System.exit(0));
-
 
         // MENU CONFIGURAÇÕES
         JMenu configMenu = new JMenu("Configurações");
@@ -67,7 +83,7 @@ public class MainWindow extends JFrame {
         JMenuItem colorItem = new JMenuItem("Cores");
         JMenuItem speedItem = new JMenuItem("Velocidade");
 
-        // Ações aos itens do menu Configurações:
+        // Ações dos itens do menu Configurações:
         defaultItem.addActionListener(e -> new SettingsDialog(this).setVisible(true));
         colorItem.addActionListener(e -> new ColorDialog(this).setVisible(true));
         speedItem.addActionListener(e -> new SpeedDialog(this).setVisible(true));
@@ -76,7 +92,6 @@ public class MainWindow extends JFrame {
         configMenu.add(defaultItem);
         configMenu.add(colorItem);
         configMenu.add(speedItem);
-
 
         // MENU AJUDA
         JMenu helpMenu = new JMenu("Ajuda");
@@ -91,7 +106,6 @@ public class MainWindow extends JFrame {
         helpMenu.add(helpItem);
         helpMenu.add(aboutItem);
 
-
         // Adiciona os menus criados na barra de menus
         menuBar.add(fileMenu);
         menuBar.add(configMenu);
@@ -99,11 +113,23 @@ public class MainWindow extends JFrame {
     }
 
     private void addComponents() {
+        // Criar um painel para centralizar a área de texto
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridBagLayout());
+        centerPanel.setBackground(Color.LIGHT_GRAY);  // Definir cor de fundo visível ao redor do texto
+
+        // Configurar a área de texto só com scroll vertical
+        JScrollPane scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(600, 400));
+        centerPanel.add(scrollPane, new GridBagConstraints());
+
+        // Adicionar o painel central à janela principal
+        this.add(centerPanel, BorderLayout.CENTER);
+
         // Adicionar barra de status na parte inferior da janela
         this.add(statusPanel, BorderLayout.SOUTH);
 
         // Adicionar a barra de menus na janela
         this.setJMenuBar(menuBar);
     }
-
 }
