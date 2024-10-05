@@ -4,10 +4,12 @@ import java.awt.*;
 public class SettingsDialog extends JDialog {
 
     private AnimatedPanel animatedPanel;
+    private JLabel statusLabel; // Adicionar referência ao statusLabel
 
     public SettingsDialog(JFrame parent, AnimatedPanel animatedPanel) {
         super(parent, "Configurações de Padrões", true);
         this.animatedPanel = animatedPanel;
+        this.statusLabel = ((MainWindow) parent).getStatusLabel(); // Obter statusLabel da MainWindow
         this.setSize(300, 200);
         this.setLocationRelativeTo(parent);
         this.setResizable(false);
@@ -24,6 +26,7 @@ public class SettingsDialog extends JDialog {
         applyButton.addActionListener(e -> {
             int selectedPattern = patternComboBox.getSelectedIndex();
             animatedPanel.setPatternType(selectedPattern); // Mudar o padrão no painel
+            statusLabel.setText("Status: " + patterns[selectedPattern] + " selecionado"); // Atualizar o status
             dispose();
         });
 
@@ -33,4 +36,3 @@ public class SettingsDialog extends JDialog {
         this.add(applyButton, BorderLayout.SOUTH);
     }
 }
-

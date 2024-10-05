@@ -12,35 +12,31 @@ public class AnimatedPanel extends JPanel implements Runnable {
     private int maxSteps;
     private boolean running;
     private boolean isDrawing;
-
-    // Coordenadas para os três desenhos
     private Point[] positions;
 
     public AnimatedPanel() {
         this.backgroundColor = Color.WHITE;
-        this.shapeColor = Color.RED;
+        this.shapeColor = Color.RED; // Inicia com a cor vermelha para o desenho
         this.patternType = 0;
         this.speed = 5;
-        this.steps = new int[]{0, 0, 0}; // Independente para cada forma
+        this.steps = new int[]{0, 0, 0};
         this.maxSteps = 100;
         this.running = true;
         this.isDrawing = true;
 
-        // Definir as três posições para os desenhos (são atualizadas dinamicamente)
         this.positions = new Point[3];
         calculatePositions();
 
         new Thread(this).start();
     }
 
-    // Configuração para o painel
     public void setBackgroundColor(Color color) {
         this.backgroundColor = color;
         repaint();
     }
 
     public void setShapeColor(Color color) {
-        this.shapeColor = color;
+        this.shapeColor = color; // Altera a cor do desenho
         repaint();
     }
 
@@ -54,22 +50,11 @@ public class AnimatedPanel extends JPanel implements Runnable {
         this.speed = speed;
     }
 
-    public void stopDrawing() {
-        isDrawing = false;
-    }
-
-    public void resumeDrawing() {
-        isDrawing = true;
-        repaint();
-    }
-
-    // Recalcula posições com base no tamanho do painel para centralizar
     private void calculatePositions() {
         int width = getWidth();
         int height = getHeight();
-        int spacing = width / 4; // Espaço horizontal entre as formas
+        int spacing = width / 4;
 
-        // Calcula posições centralizadas pra as formas
         this.positions[0] = new Point(spacing, height / 2);
         this.positions[1] = new Point(width / 2, height / 2);
         this.positions[2] = new Point(width - spacing, height / 2);
@@ -83,25 +68,15 @@ public class AnimatedPanel extends JPanel implements Runnable {
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setStroke(new BasicStroke(3));
+        g2d.setColor(shapeColor); // Define a cor do desenho
 
-        // Define a cor da forma
-        g2d.setColor(shapeColor);
-
-        // Recalcula as posições antes de desenhar para garantir centralização
         calculatePositions();
 
-        // Desenhar três formas nas posições definidas
         for (int i = 0; i < positions.length; i++) {
             switch (patternType) {
-                case 0:
-                    drawCircle(g2d, positions[i], i);
-                    break;
-                case 1:
-                    drawStar(g2d, positions[i], i);
-                    break;
-                case 2:
-                    drawHexagon(g2d, positions[i], i);
-                    break;
+                case 0 -> drawCircle(g2d, positions[i], i);
+                case 1 -> drawStar(g2d, positions[i], i);
+                case 2 -> drawHexagon(g2d, positions[i], i);
             }
         }
     }

@@ -6,7 +6,7 @@ import java.awt.*;
 public class FileHandler {
 
     private JTextArea textArea;
-    private MainWindow mainWindow; // Referência à janela principal
+    private MainWindow mainWindow;
     private JPanel centerPanel;
 
     public FileHandler(MainWindow mainWindow) {
@@ -22,12 +22,13 @@ public class FileHandler {
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                textArea.setText(""); // Limpa a área de texto
+                textArea.setText("");
                 String line;
                 while ((line = reader.readLine()) != null) {
                     textArea.append(line + "\n");
                 }
-                showTextArea(); // Exibir o painel de texto ao abrir o arquivo
+                showTextArea();
+                mainWindow.getStatusLabel().setText("Status: Arquivo " + file + " aberto"); // Atualizar status
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -35,11 +36,11 @@ public class FileHandler {
     }
 
     public void closeFile() {
-        textArea.setText(""); // Limpar a área de texto
-        hideTextArea(); // Esconder a área de texto e mostrar a animação de fundo
+        textArea.setText("");
+        hideTextArea();
+        mainWindow.getStatusLabel().setText("Status: Arquivo fechado. Desenhando padrão..."); // Atualizar status para o padrão
     }
 
-    // Mostrar a área de texto no centro da janela e parar a animação
     public void showTextArea() {
         if (centerPanel == null) {
             centerPanel = new JPanel(new GridBagLayout());
@@ -48,18 +49,17 @@ public class FileHandler {
             centerPanel.add(scrollPane, new GridBagConstraints());
         }
 
-        mainWindow.removeAnimatedPanel(); // Remove a animação de fundo
+        mainWindow.removeAnimatedPanel();
         mainWindow.add(centerPanel, BorderLayout.CENTER);
         mainWindow.revalidate();
         mainWindow.repaint();
     }
 
-    // Esconder a área de texto e voltar a animação de fundo
     public void hideTextArea() {
         if (centerPanel != null) {
-            mainWindow.remove(centerPanel); // Remove o painel de texto
+            mainWindow.remove(centerPanel);
         }
-        mainWindow.addAnimatedPanel(); // Adiciona de volta a animação de fundo
+        mainWindow.addAnimatedPanel();
         mainWindow.revalidate();
         mainWindow.repaint();
     }

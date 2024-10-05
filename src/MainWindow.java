@@ -9,9 +9,9 @@ public class MainWindow extends JFrame {
     private JPanel statusPanel;
     private JLabel statusLabel;
     private JMenuBar menuBar;
-    private AnimatedPanel animatedPanel; // Painel animado de fundo
-    private JTextArea textArea; // Área de texto para exibir o conteúdo do arquivo
-    private FileHandler fileHandler; // Objeto manipulador dos arquivos
+    private AnimatedPanel animatedPanel;
+    private JTextArea textArea;
+    private FileHandler fileHandler;
     private String title;
 
     public MainWindow(String title) {
@@ -31,11 +31,8 @@ public class MainWindow extends JFrame {
     }
 
     private void initializeComponents() {
-        statusPanel = new JPanel();
-        statusLabel = new JLabel(this.title);
-        statusPanel.add(statusLabel);
-        statusPanel.setBackground(Color.LIGHT_GRAY);
-        statusPanel.setBorder(BorderFactory.createEtchedBorder());
+        statusLabel = new JLabel("Status: Desenhando padrão..."); // Status inicial
+        statusPanel = createStatusBar();
 
         textArea = new JTextArea();
         textArea.setMargin(new Insets(10, 10, 10, 10));
@@ -68,7 +65,7 @@ public class MainWindow extends JFrame {
         JMenuItem colorItem = new JMenuItem("Cores");
         JMenuItem speedItem = new JMenuItem("Velocidade");
         defaultItem.addActionListener(e -> new SettingsDialog(this, animatedPanel).setVisible(true));
-        colorItem.addActionListener(e -> new ColorDialog(this, animatedPanel).setVisible(true));
+        colorItem.addActionListener(e -> new ColorDialog(this, animatedPanel, statusLabel).setVisible(true)); // Adicionar statusLabel
         speedItem.addActionListener(e -> new SpeedDialog(this, animatedPanel).setVisible(true));
         configMenu.add(defaultItem);
         configMenu.add(colorItem);
@@ -88,13 +85,23 @@ public class MainWindow extends JFrame {
         menuBar.add(helpMenu);
     }
 
+    private JPanel createStatusBar() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel.setBackground(Color.LIGHT_GRAY);
+        panel.add(statusLabel);
+        return panel;
+    }
+
+    public JLabel getStatusLabel() {
+        return statusLabel;
+    }
+
     private void addComponents() {
         this.add(animatedPanel, BorderLayout.CENTER);
         this.add(statusPanel, BorderLayout.SOUTH);
         this.setJMenuBar(menuBar);
     }
 
-    // Métodos para adicionar/remover o painel animado
     public void removeAnimatedPanel() {
         this.remove(animatedPanel);
     }

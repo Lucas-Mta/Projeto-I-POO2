@@ -1,43 +1,222 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpDialog extends JDialog {
+    private JPanel mainPanel;
+    private JPanel buttonPanel;
+    private CardLayout cardLayout;
+    private int currentCard = 0;
+    private List<String> helpTexts;
+    private JButton prevButton;
+    private JButton nextButton;
+    private JLabel pageIndicator;
 
     public HelpDialog(JFrame parent) {
-        // Define o título do diálogo, o pai da janela e a modalidade
-        // (bloqueia a janela pai enquanto o diálogo está aberto):
         super(parent, "Ajuda", true);
-        setSize(400, 300);
+
+        // Configurar o ícone de interrogação no título
+        JLabel titleLabel = new JLabel("", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        titleLabel.setIcon(UIManager.getIcon("OptionPane.questionIcon"));
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.add(titleLabel);
+
+        initializeComponents();
+        setupLayout();
+        setupActions();
+
+        // Adiciona o painel do título
+        add(titlePanel, BorderLayout.NORTH);
+
+        // Configuração final da janela
+        setSize(600, 500);
         setResizable(false);
         setLocationRelativeTo(parent);
+    }
 
-        // Cria uma área de texto contendo informações de ajuda
-        JTextArea helpText = getjTextArea();
+    private void initializeComponents() {
+        // Inicializa os textos de ajuda
+        helpTexts = new ArrayList<>();
+        helpTexts.add("""
+            	Bem-vindo ao Sistema de Manipulação de Arquivos
+           	 
+            	Esta aplicação permite que você manipule arquivos de texto \
+            	e customize animações de fundo. Use o menu 'Arquivo' para \
+            	abrir e gerenciar seus arquivos de texto.""");
 
-        // Adiciona a permisão pra rolagem vertical
-        JScrollPane scrollPane = new JScrollPane(helpText);
+        helpTexts.add("""
+            	Manipulação de Arquivos
+           	 
+            	1. Abrir Arquivo:
+               	Para abrir um arquivo, vá até o menu 'Arquivo' no topo da janela e selecione a opção 'Abrir Arquivo'. \
+            	Será aberta uma janela de seleção onde você poderá navegar pelo diretório do seu sistema e escolher o arquivo desejado. \
+            	Após selecionar o arquivo, o conteúdo será carregado e exibido na área central de texto.
+           	 
+            	2. Fechar Arquivo:
+               	Se desejar fechar o arquivo atual, selecione 'Fechar Arquivo' no menu 'Arquivo'. \
+            	Isso limpará o conteúdo exibido na área de texto, deixando-a em branco. Essa ação não altera ou deleta o arquivo original.
+           	 
+               	O conteúdo do arquivo selecionado será exibido na área central da janela, logo abaixo da barra de menus. \
+            	A área de texto suporta rolagem vertical para facilitar a leitura de arquivos grandes, além de ajuste automático de quebras de linha, \
+            	garantindo que o texto se adapte à largura da janela.""");
+
+        helpTexts.add("""
+            	Configurações de Animação
+           	 
+            	No menu 'Configurações', você pode ajustar diferentes aspectos das animações da interface. Abaixo estão as opções disponíveis:
+           	 
+            	1. Padrões:
+               	Esta opção permite que você selecione diferentes padrões para o comportamento das animações de fundo. \
+            	Os padrões controlam como as animações são desenhadas e exibidas, alterando a dinâmica visual da aplicação. \
+            	Para ajustar, vá ao menu 'Configurações' > 'Padrões' e selecione o padrão desejado.
+           	 
+            	2. Cores:
+               	Se você deseja alterar as cores de fundo das animações, utilize a opção 'Cores' no menu 'Configurações'. \
+            	Isso permitirá escolher novas combinações de cores para personalizar a aparência visual das animações exibidas na janela principal.
+           	 
+            	3. Velocidade:
+               	Para controlar a velocidade com que as animações de fundo são executadas, utilize a opção 'Velocidade' no menu 'Configurações'. \
+            	Aqui, você pode ajustar a rapidez com que os padrões de animação se movem, criando uma experiência mais suave ou dinâmica, conforme sua preferência.
+           	 
+            	Essas configurações permitem personalizar a interface de acordo com suas preferências visuais, tornando a experiência mais agradável e adaptada ao seu gosto.""");
+        // Inicializa os painéis
+        mainPanel = new JPanel();
+        cardLayout = new CardLayout();
+        mainPanel.setLayout(cardLayout);
+
+        // Cria os cards com conteúdo
+        for (int i = 0; i < helpTexts.size(); i++) {
+            mainPanel.add(createHelpCard(i), "card" + i);
+        }
+
+        // Inicializa o painel de botões
+        buttonPanel = new JPanel(new FlowLayout());
+        prevButton = new JButton("← Anterior");
+        nextButton = new JButton("Próximo →");
+        pageIndicator = new JLabel("1/" + helpTexts.size());
+
+        // Configura estado inicial dos botões
+        prevButton.setEnabled(false);
+        updateNavigationButtons();
+    }
+
+    private JPanel createHelpCard(int index) {
+        JPanel card = new JPanel(new BorderLayout(10, 10));
+        card.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Cria o painel superior com ícone ou título
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        // Adiciona um ícone de título estilizado
+        JLabel titleLabel = createStylizedTitleLabel(index);
+        topPanel.add(titleLabel);
+
+        // Cria área de texto com scroll
+        JTextArea textArea = new JTextArea(helpTexts.get(index));
+        textArea.setWrapStyleWord(true);
+        textArea.setLineWrap(true);
+        textArea.setEditable(false);
+        textArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        textArea.setMargin(new Insets(10, 10, 10, 10));
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        JButton closeButton = new JButton("Fechar");
-        // Adiciona um listener ao botão para fechar o diálogo quando clicado
-        closeButton.addActionListener(e -> dispose());
+        card.add(topPanel, BorderLayout.NORTH);
+        card.add(scrollPane, BorderLayout.CENTER);
 
-        add(scrollPane, BorderLayout.CENTER);
-        add(closeButton, BorderLayout.SOUTH);
+        return card;
     }
 
-    private static JTextArea getjTextArea() {
-        JTextArea helpText = new JTextArea(
-                """
-                Essa aplicação em Java permite a manipulação de arquivos de texto.
-                Além disso, ela possui configurações personalizadas para animações no fundo.
-                """
-        );
-        helpText.setWrapStyleWord(true);    // Quebra de linha no limite das palavras
-        helpText.setLineWrap(true);         // Ativa a quebra de linha automática
-        helpText.setEditable(false);        // O texto não pode ser editado
-        helpText.setMargin(new Insets(10, 10, 10, 10));  // Margens internas
-        return helpText;
+    private JLabel createStylizedTitleLabel(int index) {
+        String title = "";
+        Color iconColor = new Color(51, 153, 255); // Azul padrão
+        Icon icon = null;
+
+        switch (index) {
+            case 0:
+                title = "  Início  ";
+                iconColor = new Color(51, 153, 255); // Azul
+                icon = UIManager.getIcon("FileView.homeFolder"); // Ícone de home
+                if (icon == null) { // Fallback se o ícone não estiver disponível
+                    icon = UIManager.getIcon("Tree.openIcon");
+                }
+                break;
+            case 1:
+                title = "  Arquivos  ";
+                iconColor = new Color(76, 175, 80); // Verde
+                icon = UIManager.getIcon("FileView.fileIcon"); // Ícone de arquivo
+                if (icon == null) {
+                    icon = UIManager.getIcon("Tree.leafIcon");
+                }
+                break;
+            case 2:
+                title = "  Configurações  ";
+                iconColor = new Color(255, 152, 0); // Laranja
+                // Como não há um ícone de engrenagem nativo, usamos um ícone de propriedades
+                icon = UIManager.getIcon("OptionPane.warningIcon");
+                if (icon == null) {
+                    icon = UIManager.getIcon("FileView.computerIcon");
+                }
+                break;
+        }
+
+        JLabel label = new JLabel(title);
+        label.setFont(new Font("SansSerif", Font.BOLD, 18));
+        label.setForeground(iconColor);
+        label.setIcon(icon);
+        label.setIconTextGap(10); // Espaço entre o ícone e o texto
+
+        // Adiciona uma borda composta: linha colorida externa e padding interno
+        label.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(iconColor, 2),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        return label;
+    }
+
+    private void setupLayout() {
+        setLayout(new BorderLayout());
+
+        // Adiciona os botões ao painel
+        buttonPanel.add(prevButton);
+        buttonPanel.add(pageIndicator);
+        buttonPanel.add(nextButton);
+
+        // Adiciona um botão de fechar
+        JButton closeButton = new JButton("Fechar");
+        closeButton.addActionListener(e -> dispose());
+
+        // Adiciona todos os componentes ao diálogo
+        add(mainPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void setupActions() {
+        prevButton.addActionListener(e -> {
+            if (currentCard > 0) {
+                currentCard--;
+                cardLayout.previous(mainPanel);
+                updateNavigationButtons();
+            }
+        });
+
+        nextButton.addActionListener(e -> {
+            if (currentCard < helpTexts.size() - 1) {
+                currentCard++;
+                cardLayout.next(mainPanel);
+                updateNavigationButtons();
+            }
+        });
+    }
+
+    private void updateNavigationButtons() {
+        prevButton.setEnabled(currentCard > 0);
+        nextButton.setEnabled(currentCard < helpTexts.size() - 1);
+        pageIndicator.setText((currentCard + 1) + "/" + helpTexts.size());
     }
 }
