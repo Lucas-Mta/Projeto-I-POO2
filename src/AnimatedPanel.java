@@ -7,25 +7,33 @@ public class AnimatedPanel extends JPanel implements Runnable {
     private Color backgroundColor;
     private Color shapeColor;
     private int patternType; // 0 = Círculo, 1 = Estrela, 2 = Hexágono
-    private int speed; // Velocidade de animação
-    private int step; // Passo atual na formação da forma
-    private int maxSteps; // Máximo de passos para completar a forma
-    private boolean running; // Controle da thread de animação
-    private boolean isDrawing; // Se a animação está em execução
+    private int speed;
+    private int[] steps;
+    private int maxSteps;
+    private boolean running;
+    private boolean isDrawing;
+
+    // Coordenadas para os três desenhos
+    private Point[] positions;
 
     public AnimatedPanel() {
         this.backgroundColor = Color.WHITE;
         this.shapeColor = Color.RED;
         this.patternType = 0;
         this.speed = 5;
-        this.step = 0;
-        this.maxSteps = 100; // Definição de steps para completar cada padrão
+        this.steps = new int[]{0, 0, 0}; // Independente para cada forma
+        this.maxSteps = 100;
         this.running = true;
         this.isDrawing = true;
+
+        // Definir as três posições para os desenhos (são atualizadas dinamicamente)
+        this.positions = new Point[3];
+        calculatePositions();
+
         new Thread(this).start();
     }
 
-    // Métodos de configuração para o painel animado
+    // Configuração para o painel
     public void setBackgroundColor(Color color) {
         this.backgroundColor = color;
         repaint();
@@ -38,7 +46,7 @@ public class AnimatedPanel extends JPanel implements Runnable {
 
     public void setPatternType(int patternType) {
         this.patternType = patternType;
-        this.step = 0; // Reiniciar o desenho ao trocar de padrão
+        this.steps = new int[]{0, 0, 0}; // Reinicia o desenho ao trocar de padrão
         repaint();
     }
 
@@ -55,6 +63,18 @@ public class AnimatedPanel extends JPanel implements Runnable {
         repaint();
     }
 
+    // Recalcula posições com base no tamanho do painel para centralizar
+    private void calculatePositions() {
+        int width = getWidth();
+        int height = getHeight();
+        int spacing = width / 4; // Espaço horizontal entre as formas
+
+        // Calcula posições centralizadas pra as formas
+        this.positions[0] = new Point(spacing, height / 2);
+        this.positions[1] = new Point(width / 2, height / 2);
+        this.positions[2] = new Point(width - spacing, height / 2);
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -62,53 +82,59 @@ public class AnimatedPanel extends JPanel implements Runnable {
 
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setStroke(new BasicStroke(2)); // Ajuste estético para suavizar as linhas
+        g2d.setStroke(new BasicStroke(3));
 
-        // Definir a cor da forma
+        // Define a cor da forma
         g2d.setColor(shapeColor);
 
-        switch (patternType) {
-            case 0:
-                drawCircle(g2d);
-                break;
-            case 1:
-                drawStar(g2d);
-                break;
-            case 2:
-                drawHexagon(g2d);
-                break;
+        // Recalcula as posições antes de desenhar para garantir centralização
+        calculatePositions();
+
+        // Desenhar três formas nas posições definidas
+        for (int i = 0; i < positions.length; i++) {
+            switch (patternType) {
+                case 0:
+                    drawCircle(g2d, positions[i], i);
+                    break;
+                case 1:
+                    drawStar(g2d, positions[i], i);
+                    break;
+                case 2:
+                    drawHexagon(g2d, positions[i], i);
+                    break;
+            }
         }
     }
 
-    // Método para desenhar o círculo em segmentos
-    private void drawCircle(Graphics2D g2d) {
-        int diameter = 200;
-        int x = (getWidth() - diameter) / 2;
-        int y = (getHeight() - diameter) / 2;
+    // Metodo para desenhar o círculo em segmentos, recebendo posição como parâmetro
+    private void drawCircle(Graphics2D g2d, Point position, int index) {
+        int diameter = 100;
+        int x = position.x - diameter / 2;
+        int y = position.y - diameter / 2;
 
         double startAngle = 0;
-        double angleExtent = (double) step / maxSteps * 360; // Ângulo atual baseado no step
+        double angleExtent = (double) steps[index] / (maxSteps - 1) * 360; // Ajustado para garantir 360º completos
 
         g2d.draw(new Arc2D.Double(x, y, diameter, diameter, startAngle, angleExtent, Arc2D.OPEN));
     }
 
-    // Método para desenhar a estrela ponta a ponta
-    private void drawStar(Graphics2D g2d) {
-        double centerX = getWidth() / 2.0;
-        double centerY = getHeight() / 2.0;
-        double outerRadius = 100;
-        double innerRadius = 40;
+    // Metodo para desenhar a estrela ponta a ponta - recebe uma posição como parâmetro
+    private void drawStar(Graphics2D g2d, Point position, int index) {
+        double centerX = position.x;
+        double centerY = position.y;
+        double outerRadius = 50;
+        double innerRadius = 20;
 
         // Configurar um caminho para desenhar a estrela
         Path2D star = new Path2D.Double();
-        int points = 5; // Número de pontos na estrela
+        int points = 5; // Número de pontass da estrela
 
         // Desenhar a estrela um ponto de cada vez até completar
-        for (int i = 0; i <= step && i <= points * 2; i++) {
+        for (int i = 0; i <= steps[index] && i <= points * 2; i++) {
             double angle = Math.toRadians(i * 360.0 / (points * 2)); // Ângulo para cada ponto
-            double radius = (i % 2 == 0) ? outerRadius : innerRadius; // Alternar entre raio externo e interno
+            double radius = (i % 2 == 0) ? outerRadius : innerRadius;
             double x = centerX + radius * Math.cos(angle);
-            double y = centerY - radius * Math.sin(angle); // Eixo y invertido no sistema de coordenadas
+            double y = centerY - radius * Math.sin(angle);
 
             if (i == 0) {
                 star.moveTo(x, y);
@@ -117,26 +143,25 @@ public class AnimatedPanel extends JPanel implements Runnable {
             }
         }
 
-        if (step >= points * 2) {
+        if (steps[index] >= points * 2) {
             star.closePath(); // Fechar o caminho se a estrela estiver completa
-            step = 0; // Reiniciar o desenho ao completar a estrela
         }
 
         g2d.draw(star);
     }
 
-    // Método para desenhar um hexágono construído lado a lado
-    private void drawHexagon(Graphics2D g2d) {
-        double centerX = getWidth() / 2.0;
-        double centerY = getHeight() / 2.0;
-        double radius = 80; // Raio do hexágono
+    // Metodo para desenhar um hexágono construído lado a lado, recebendo posição como parâmetro
+    private void drawHexagon(Graphics2D g2d, Point position, int index) {
+        double centerX = position.x;
+        double centerY = position.y;
+        double radius = 40;
 
         Path2D hexagon = new Path2D.Double();
         int sides = 6; // Número de lados do hexágono
 
-        // Desenhar o hexágono um lado de cada vez até completar
-        for (int i = 0; i <= step && i <= sides; i++) {
-            double angle = Math.toRadians(60 * i - 30); // Ângulo para cada vértice do hexágono (-30 para ajuste de rotação)
+        // Desenhar o hexágono um lado de cada vez
+        for (int i = 0; i <= steps[index] && i <= sides; i++) {
+            double angle = Math.toRadians(60 * i - 30);
             double x = centerX + radius * Math.cos(angle);
             double y = centerY + radius * Math.sin(angle);
 
@@ -147,9 +172,8 @@ public class AnimatedPanel extends JPanel implements Runnable {
             }
         }
 
-        if (step >= sides) {
+        if (steps[index] >= sides) {
             hexagon.closePath(); // Fechar o caminho se o hexágono estiver completo
-            step = 0; // Reiniciar o desenho ao completar o hexágono
         }
 
         g2d.draw(hexagon);
@@ -159,10 +183,21 @@ public class AnimatedPanel extends JPanel implements Runnable {
     public void run() {
         while (running) {
             if (isDrawing) {
-                step++;
-                if (step > maxSteps) {
-                    step = 0; // Reinicia o desenho quando completar
+                boolean allComplete = true;
+                for (int i = 0; i < steps.length; i++) {
+                    steps[i]++;
+                    int maxForPattern = (patternType == 1) ? 11 : (patternType == 2) ? 7 : maxSteps;
+
+                    if (steps[i] < maxForPattern) {
+                        allComplete = false;
+                    }
                 }
+
+                if (allComplete) {
+                    // Reinicia o processo para todas as formas
+                    steps = new int[]{0, 0, 0};
+                }
+
                 repaint();
             }
             try {
