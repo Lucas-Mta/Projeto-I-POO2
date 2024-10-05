@@ -3,19 +3,20 @@ import java.awt.*;
 
 public class ColorDialog extends JDialog{
 
-    public ColorDialog(JFrame parent) {
+    private AnimatedPanel animatedPanel;
+
+    public ColorDialog(JFrame parent, AnimatedPanel animatedPanel) {
         super(parent, "Configurações de Cor", true);
+        this.animatedPanel = animatedPanel;
         this.setSize(300, 200);
         this.setLocationRelativeTo(parent);
         this.setResizable(false);
 
         JButton colorButton = new JButton("Escolher Cor");
         colorButton.addActionListener(e -> {
-            Color color = JColorChooser.showDialog(this,
-                    "Escolha uma cor", Color.WHITE);
+            Color color = JColorChooser.showDialog(this, "Escolha uma cor", Color.WHITE);
             if (color != null) {
-                // Implementar a mudança de cor do fundo
-                System.out.println("Cor selecionada: " + color);
+                animatedPanel.setBackgroundColor(color); // Mudar a cor de fundo do painel
                 dispose();
             }
         });
@@ -28,4 +29,7 @@ public class ColorDialog extends JDialog{
         this.add(new JLabel("Escolha a cor de fundo"), BorderLayout.NORTH);
         this.add(centerPanel, BorderLayout.CENTER);
     }
+
+
 }
+

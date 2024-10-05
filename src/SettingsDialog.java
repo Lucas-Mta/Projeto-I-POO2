@@ -3,27 +3,27 @@ import java.awt.*;
 
 public class SettingsDialog extends JDialog {
 
-    public SettingsDialog(JFrame parent) {
+    private AnimatedPanel animatedPanel;
+
+    public SettingsDialog(JFrame parent, AnimatedPanel animatedPanel) {
         super(parent, "Configurações de Padrões", true);
+        this.animatedPanel = animatedPanel;
         this.setSize(300, 200);
         this.setLocationRelativeTo(parent);
         this.setResizable(false);
 
-        // Exemplo de escolha de padrão
         String[] patterns = {"Padrão 1", "Padrão 2", "Padrão 3"};
-        JComboBox<String> patternCombox = new JComboBox<>(patterns);
+        JComboBox<String> patternComboBox = new JComboBox<>(patterns);
 
-        // Centralizar a escolha no meio da tela
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        centerPanel.add(patternCombox);
+        centerPanel.add(patternComboBox);
 
         JButton applyButton = new JButton("Aplicar");
         applyButton.addActionListener(e -> {
-            String selectedPattern = (String) patternCombox.getSelectedItem();
-            // Implementar
-            System.out.println("Padrão selecionado: " + selectedPattern);
+            int selectedPattern = patternComboBox.getSelectedIndex();
+            animatedPanel.setPatternType(selectedPattern); // Mudar o padrão no painel
             dispose();
         });
 
@@ -33,3 +33,4 @@ public class SettingsDialog extends JDialog {
         this.add(applyButton, BorderLayout.SOUTH);
     }
 }
+

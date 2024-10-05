@@ -2,8 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SpeedDialog extends JDialog {
-    public SpeedDialog(JFrame parent) {
+    private AnimatedPanel animatedPanel;
+
+    public SpeedDialog(JFrame parent, AnimatedPanel animatedPanel) {
         super(parent, "Configurações de Velocidade", true);
+        this.animatedPanel = animatedPanel;
         this.setSize(300, 200);
         this.setLocationRelativeTo(parent);
         this.setResizable(false);
@@ -16,8 +19,7 @@ public class SpeedDialog extends JDialog {
         JButton applyButton = new JButton("Aplicar");
         applyButton.addActionListener(e -> {
             int speed = speedSlider.getValue();
-            // Implementar a mudança de velocidade aqui
-            System.out.println("Velocidade selecionada: " + speed);
+            animatedPanel.setSpeed(speed); // Mudar a velocidade do painel
             dispose();
         });
 
@@ -32,3 +34,4 @@ public class SpeedDialog extends JDialog {
         this.add(applyButton, BorderLayout.SOUTH);
     }
 }
+
