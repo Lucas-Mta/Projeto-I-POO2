@@ -135,7 +135,6 @@ public class AboutDialog extends JDialog {
         	• Animações dinâmicas de fundo
         	• Personalização completa
        	 
-        	Desenvolvido por: Lucas Mota
         	Copyright © 2024. Todos os direitos reservados.
         	""", APP_NAME));
         return infoArea;
@@ -215,12 +214,11 @@ public class AboutDialog extends JDialog {
 
         JTextArea creditsText = new JTextArea("""
         	Equipe de Desenvolvimento:
-        	Lucas Mota - Desenvolvedor Principal
-        	Amanda Sales
-        	Pedro Conceição
-       	 
-        	Equipe de teste:
-       	 
+        	Lucas De Jesus Mota Ferreira - Desenvolvedor Principal
+        	Amanda Greyce De Sales
+        	Yoon Sung Jang
+        	Pedro Dos Santos Conceição
+       	        	 
         	Bibliotecas utilizadas:
         	• Java Swing
         	• Java AWT
