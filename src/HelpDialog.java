@@ -42,7 +42,7 @@ public class HelpDialog extends JDialog {
         helpTexts.add("""
             <html>
                 <h1>Bem-vindo ao Sistema de Manipulação de Arquivos</h1>
-                <p>Esta aplicação permite que você manipule arquivos de texto e customize animações de fundo. Use o menu 'Arquivo' para abrir e gerenciar seus arquivos de texto.</p>
+                <p>Esta aplicação permite que você abra e feche arquivos de texto e customize animações de fundo. Use o menu 'Arquivo' para abrir e gerenciar seus arquivos de texto.</p>
             </html>""");
 
         helpTexts.add("""
