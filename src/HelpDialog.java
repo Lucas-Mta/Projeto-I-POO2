@@ -40,47 +40,44 @@ public class HelpDialog extends JDialog {
         // Inicializa os textos de ajuda
         helpTexts = new ArrayList<>();
         helpTexts.add("""
-            	Bem-vindo ao Sistema de Manipulação de Arquivos
-           	 
-            	Esta aplicação permite que você manipule arquivos de texto \
-            	e customize animações de fundo. Use o menu 'Arquivo' para \
-            	abrir e gerenciar seus arquivos de texto.""");
+            <html>
+                <h1>Bem-vindo ao Sistema de Manipulação de Arquivos</h1>
+                <p>Esta aplicação permite que você manipule arquivos de texto e customize animações de fundo. Use o menu 'Arquivo' para abrir e gerenciar seus arquivos de texto.</p>
+            </html>""");
 
         helpTexts.add("""
-            	Manipulação de Arquivos
-           	 
-            	1. Abrir Arquivo:
-               	Para abrir um arquivo, vá até o menu 'Arquivo' no topo da janela e selecione a opção 'Abrir Arquivo'. \
-            	Será aberta uma janela de seleção onde você poderá navegar pelo diretório do seu sistema e escolher o arquivo desejado. \
-            	Após selecionar o arquivo, o conteúdo será carregado e exibido na área central de texto.
-           	 
-            	2. Fechar Arquivo:
-               	Se desejar fechar o arquivo atual, selecione 'Fechar Arquivo' no menu 'Arquivo'. \
-            	Isso limpará o conteúdo exibido na área de texto, deixando-a em branco. Essa ação não altera ou deleta o arquivo original.
-           	 
-               	O conteúdo do arquivo selecionado será exibido na área central da janela, logo abaixo da barra de menus. \
-            	A área de texto suporta rolagem vertical para facilitar a leitura de arquivos grandes, além de ajuste automático de quebras de linha, \
-            	garantindo que o texto se adapte à largura da janela.""");
+            <html>
+                <h1>Manipulação de Arquivos</h1>
+                <h2>1. Abrir Arquivo:</h2>
+                <img src="%s" alt="Image 1" width="400" height="300">
+                <p>Para abrir um arquivo, vá até o menu 'Arquivo' no topo da janela e selecione a opção 'Abrir Arquivo'. Será aberta uma janela de seleção onde você poderá navegar pelo diretório do seu sistema e escolher o arquivo desejado. Após selecionar o arquivo, o conteúdo será carregado e exibido na área central de texto.</p>
+                <h2>2. Fechar Arquivo:</h2>
+                <img src="%s" alt="Image 2" width="400" height="300">
+                <p>Se desejar fechar o arquivo atual, selecione 'Fechar Arquivo' no menu 'Arquivo'. Isso limpará o conteúdo exibido na área de texto, deixando-a em branco. Essa ação não altera ou deleta o arquivo original.</p>
+                <p>O conteúdo do arquivo selecionado será exibido na área central da janela, logo abaixo da barra de menus. A área de texto suporta rolagem vertical para facilitar a leitura de arquivos grandes, além de ajuste automático de quebras de linha, garantindo que o texto se adapte à largura da janela.</p>
+            </html>""".formatted(getClass().getResource("/images/AbrirArquivo.jpg").toExternalForm(),
+                                getClass().getResource("/images/FecharArquivo.jpg").toExternalForm()));
 
         helpTexts.add("""
-            	Configurações de Animação
-           	 
-            	No menu 'Configurações', você pode ajustar diferentes aspectos das animações da interface. Abaixo estão as opções disponíveis:
-           	 
-            	1. Padrões:
-               	Esta opção permite que você selecione diferentes padrões para o comportamento das animações de fundo. \
-            	Os padrões controlam como as animações são desenhadas e exibidas, alterando a dinâmica visual da aplicação. \
-            	Para ajustar, vá ao menu 'Configurações' > 'Padrões' e selecione o padrão desejado.
-           	 
-            	2. Cores:
-               	Se você deseja alterar as cores de fundo das animações, utilize a opção 'Cores' no menu 'Configurações'. \
-            	Isso permitirá escolher novas combinações de cores para personalizar a aparência visual das animações exibidas na janela principal.
-           	 
-            	3. Velocidade:
-               	Para controlar a velocidade com que as animações de fundo são executadas, utilize a opção 'Velocidade' no menu 'Configurações'. \
-            	Aqui, você pode ajustar a rapidez com que os padrões de animação se movem, criando uma experiência mais suave ou dinâmica, conforme sua preferência.
-           	 
-            	Essas configurações permitem personalizar a interface de acordo com suas preferências visuais, tornando a experiência mais agradável e adaptada ao seu gosto.""");
+            <html>
+                <h1>Configurações de Animação</h1>
+                <img src="%s" alt="Image 3" width="400" height="300">
+                <p>No menu 'Configurações', você pode ajustar diferentes aspectos das animações da interface. Abaixo estão as opções disponíveis:</p>
+                <h2>1. Padrões:</h2>
+                <img src="%s" alt="Image 4" width="400" height="300">
+                <p>Esta opção permite que você selecione diferentes padrões para o comportamento das animações de fundo. Os padrões controlam como as animações são desenhadas e exibidas, alterando a dinâmica visual da aplicação. Para ajustar, vá ao menu 'Configurações' > 'Padrões' e selecione o padrão desejado.</p>
+                <h2>2. Cores:</h2>
+                <img src="%s" alt="Image 5" width="400" height="300">
+                <p>Se você deseja alterar as cores de fundo das animações, utilize a opção 'Cores' no menu 'Configurações'. Isso permitirá escolher novas combinações de cores para personalizar a aparência visual das animações exibidas na janela principal.</p>
+                <h2>3. Velocidade:</h2>
+                <img src="%s" alt="Image 6" width="400" height="300">
+                <p>Para controlar a velocidade com que as animações de fundo são executadas, utilize a opção 'Velocidade' no menu 'Configurações'. Aqui, você pode ajustar a rapidez com que os padrões de animação se movem, criando uma experiência mais suave ou dinâmica, conforme sua preferência.</p>
+                <p>Essas configurações permitem personalizar a interface de acordo com suas preferências visuais, tornando a experiência mais agradável e adaptada ao seu gosto.</p>
+            </html>""".formatted(getClass().getResource("/images/Configuracoes.jpg").toExternalForm(),
+                                getClass().getResource("/images/Padroes.jpg").toExternalForm(),
+                                getClass().getResource("/images/Cores.jpg").toExternalForm(),
+                                getClass().getResource("/images/Velocidade.jpg").toExternalForm()));
+
         // Inicializa os painéis
         mainPanel = new JPanel();
         cardLayout = new CardLayout();
@@ -114,14 +111,12 @@ public class HelpDialog extends JDialog {
         topPanel.add(titleLabel);
 
         // Cria área de texto com scroll
-        JTextArea textArea = new JTextArea(helpTexts.get(index));
-        textArea.setWrapStyleWord(true);
-        textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        textArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        textArea.setMargin(new Insets(10, 10, 10, 10));
+        JEditorPane editorPane = new JEditorPane("text/html", helpTexts.get(index));
+        editorPane.setEditable(false);
+        editorPane.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        editorPane.setMargin(new Insets(10, 10, 10, 10));
 
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        JScrollPane scrollPane = new JScrollPane(editorPane);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
