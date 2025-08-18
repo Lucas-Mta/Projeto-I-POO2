@@ -75,6 +75,13 @@ Este repositório é um excelente exemplo de como integrar diferentes áreas da 
           <sub><b>Lucas Mota</b></sub>
         </a>
       </td>
+      <td align="center">
+        <a href="https://github.com/Lucas-Mta">
+          <img src="https://avatars.githubusercontent.com/u/133170152?v=4" width="100px;" alt="Foto do Contribuidor"/>
+          <br />
+          <sub><b>Yoon Sung</b></sub>
+        </a>
+      </td>
     </tr>
   </table>
 </div>
