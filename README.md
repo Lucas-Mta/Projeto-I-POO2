@@ -39,14 +39,12 @@ Este repositório é um excelente exemplo de como integrar diferentes áreas da 
 ---
 
 ### 📂 Estrutura do Projeto
+```
 ├── src/             # Código-fonte principal da aplicação
-
 ├── docs/            # Documentação e diagramas
-
 ├── lib/             # Bibliotecas externas (JARs)
-
 └── README.md
-
+```
 ---
 
 ### 📦 Como Executar
